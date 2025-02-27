@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", // Moderní cílová verze JavaScriptu
+    "module": "ESNext", // Použití ES Modules místo CommonJS
+    "strict": true, // Povolení přísného typování
+    "esModuleInterop": true, // Umožňuje kompatibilitu s CommonJS importy
+    "moduleResolution": "node", // Modulové rozlišení podle Node.js standardů
+    "outDir": "./dist", // Výstupní složka pro zkompilovaný kód
+    "rootDir": "./src", // Kořenový adresář pro zdrojový kód
+    "skipLibCheck": true, // Přeskočení kontroly typů v knihovnách
+    "forceConsistentCasingInFileNames": true, // Zabraňuje problémům s velkými/malými písmeny v cestách souborů
+    "allowSyntheticDefaultImports": true, // Umožňuje defaultní importy pro ESM moduly
+    "resolveJsonModule": true, // Podpora importu JSON souborů
+    "sourceMap": true // Generování sourcemaps pro ladění
+  },
+  "include": ["src/**/*.ts"], // Zahrnutí všech TypeScript souborů v adresáři src
+  "exclude": ["node_modules"] // Vyloučení node_modules
+}

@@ -1,0 +1,22 @@
+### Vypíše všechny položky
+GET http://localhost:5000/api/notes
+
+###
+
+POST http://localhost:5000/api/notes
+Content-Type: application/json
+
+{
+  "text": "This is my new note"
+}
+
+###
+PUT http://localhost:5000/api/notes/8cef6c41-9256-4e26-80d2-1a27fd627d72
+Content-Type: application/json
+
+{
+  "text": "Vypít všechny piva světa"
+}
+
+###
+DELETE http://localhost:5000/api/notes/75783752-fa43-4d6f-a131-4b0a7281a885
