@@ -16,6 +16,8 @@ export default function LoginPage() {
       password,
     });
 
+    console.log("SignIn result:", result);
+
     if (!result?.error) {
       router.push("/dashboard");
     } else {
