@@ -42,7 +42,6 @@ export const authOptions: NextAuthOptions = {
           });
 
           const { token, user } = data.login;
-
           if (!user) throw new Error("Invalid login credentials");
 
           return { ...user, accessToken: token } as User;
@@ -66,17 +65,15 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.email = user.email;
         token.role = "user";
-
-        // Přidání accessToken z NextAuth nebo GraphQL
-        token.accessToken = token.accessToken =
+        // Použijeme accessToken, pokud existuje, jinak vygenerujeme nový
+        token.accessToken =
           (user as User).accessToken ||
-          jwt.sign({ userId: token.id }, process.env.JWT_SECRET!, {
+          jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
             expiresIn: "15m",
           });
       }
       return token;
     },
-
     async session({ session, token }: { session: Session; token: JWT }) {
       if (token) {
         session.user = {
