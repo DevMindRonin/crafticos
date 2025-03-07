@@ -1,9 +1,9 @@
-// Display user session.
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import Link from "next/link";
 
-import { useSession } from "next-auth/react";
-
-export default function Dashboard() {
-  const { data: session } = useSession();
+export default async function Dashboard() {
+  const session = await getServerSession(authOptions);
 
   if (!session) {
     return <p>Not logged in</p>;
@@ -11,8 +11,12 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h2>Welcome, {session.user.email}!</h2>
-      <p>Access Token: {session.accessToken}</p>
+      <h1 className="text-4xl font-bold my-4">
+        Welcome, {session.user?.email}!
+      </h1>
+      <div>
+        <Link href="/notes">Go to Notes</Link>
+      </div>
     </div>
   );
 }

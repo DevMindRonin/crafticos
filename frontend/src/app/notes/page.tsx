@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { graphqlRequest } from "../../utils/api";
-
+import Link from "next/link";
 type Note = {
   id: number;
   text: string;
@@ -32,10 +32,13 @@ const NotesPage = () => {
 
   return (
     <div>
-      <h1>Notes</h1>
+      <h1 className="text-4xl font-bold my-4">Notes</h1>
       {notes.map((note) => (
         <div key={note.id}>{note.text}</div>
       ))}
+      <p>
+        <Link href="/dashboard">Back</Link>
+      </p>
     </div>
   );
 };
