@@ -8,15 +8,13 @@ import { resolvers } from "./graphql/resolvers";
 import db from "./db";
 import { getUserFromToken } from "./graphql/auth";
 
-const PORT = process.env.PORT || 5000;
-
 async function startServer() {
   const app = express();
   app.use(
     cors({
-      origin: "http://localhost:3000", // Povolí přístupy z frontendu
+      origin: process.env.FRONTEND_URL, // Povolí přístupy z frontendu
       credentials: true, // Povolí cookies a autorizace
-    })
+    }),
   );
   app.use(express.json());
 
@@ -39,12 +37,12 @@ async function startServer() {
 
         return { db, user };
       },
-    })
+    }),
   );
 
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-    console.log(`GraphQL endpoint: http://localhost:${PORT}/graphql`);
+  app.listen(process.env.BACKEND_PORT, () => {
+    console.log(`Server running on ${process.env.BACKEND_URL}`);
+    console.log(`GraphQL endpoint: ${process.env.BACKEND_URL}/graphql`);
   });
 }
 
