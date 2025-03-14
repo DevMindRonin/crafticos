@@ -16,7 +16,7 @@ export const graphqlRequest = async (query: string, variables = {}) => {
   try {
     const response = await axios.post(
       process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
-        "http://localhost:5000/graphql",
+        `${process.env.FRONTEND_URL}/graphql`,
       { query, variables },
       {
         headers: {

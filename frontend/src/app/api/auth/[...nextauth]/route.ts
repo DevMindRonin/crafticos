@@ -6,8 +6,8 @@ import NextAuth, {
 } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import jwt from "jsonwebtoken";
 import type { JWT } from "next-auth/jwt";
+import jwt from "jsonwebtoken";
 import { client } from "../../../../lib/apollo"; // Připojení k GraphQL
 import { LOGIN_MUTATION } from "@/graphql/mutations/auth"; // GraphQL mutace
 
@@ -24,11 +24,7 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Email and Password",
       credentials: {
-        email: {
-          label: "Email",
-          type: "email",
-          placeholder: "example@example.com",
-        },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
@@ -46,11 +42,14 @@ export const authOptions: NextAuthOptions = {
 
           return { ...user, accessToken: token } as User;
         } catch (error) {
-          throw new Error(`Invalid email or password: ${error}`);
+          throw new Error(`Invalid email or password ${error}`);
         }
       },
     }),
   ],
+  pages: {
+    signIn: "/auth/login", // Přesměrování na vlastní login stránku
+  },
   callbacks: {
     async jwt({
       token,
@@ -65,12 +64,19 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.email = user.email;
         token.role = "user";
-        // Použijeme accessToken, pokud existuje, jinak vygenerujeme nový
-        token.accessToken =
-          (user as User).accessToken ||
-          jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
-            expiresIn: "15m",
-          });
+
+        if (account.provider === "google") {
+          // Google => vygenerujeme vlastní JWT podepsané stejným SECRET,
+          // který ověřuje backend v getUserFromToken
+          token.accessToken = jwt.sign(
+            { userId: user.id },
+            process.env.JWT_SECRET!,
+            { expiresIn: "1h" }
+          );
+        } else {
+          // Credentials => token z GraphQL
+          token.accessToken = (user as User).accessToken;
+        }
       }
       return token;
     },
@@ -84,6 +90,9 @@ export const authOptions: NextAuthOptions = {
         session.accessToken = token.accessToken as string;
       }
       return session;
+    },
+    async redirect({ baseUrl }) {
+      return `${baseUrl}/dashboard`; // Přesměrování na Dashboard
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

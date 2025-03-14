@@ -1,13 +1,9 @@
-// frontend/src/app/notes/page.tsx (příklad v Next.js 13 App Router)
 "use client";
 
 import { useState, useEffect } from "react";
 import { graphqlRequest } from "../../utils/api";
 import Link from "next/link";
-type Note = {
-  id: number;
-  text: string;
-};
+import { Note } from "../../types/types";
 
 const NotesPage = () => {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -32,13 +28,12 @@ const NotesPage = () => {
 
   return (
     <div>
-      <h1 className="text-4xl font-bold my-4">Notes</h1>
+      <h1 className="text-4xl font-bold my-4">LIST ÚKOLŮ</h1>
       {notes.map((note) => (
         <div key={note.id}>{note.text}</div>
       ))}
-      <p>
-        <Link href="/dashboard">Back</Link>
-      </p>
+      <br />
+      <Link href="/dashboard">Back</Link>
     </div>
   );
 };
