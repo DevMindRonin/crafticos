@@ -32,7 +32,7 @@ export default function RegisterPage() {
       const { data } = await register({ variables: formData });
 
       if (data) {
-        router.push("/auth/login");
+        router.push("/login");
       }
     } catch (err) {
       setError(`Registration failed ${err}`);

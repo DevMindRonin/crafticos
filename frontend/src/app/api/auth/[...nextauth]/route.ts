@@ -48,7 +48,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/auth/login", // Přesměrování na vlastní login stránku
+    signIn: "/login", // Přesměrování na vlastní login stránku
   },
   callbacks: {
     async jwt({
