@@ -67,7 +67,7 @@ export default function LoginPage() {
       {/* Odkaz na registraci */}
       <p className="mt-4">
         Nemáš účet?{" "}
-        <Link href="/auth/register" className="text-blue-500 underline">
+        <Link href="/register" className="text-blue-500 underline">
           Zaregistruj se zde
         </Link>
       </p>
