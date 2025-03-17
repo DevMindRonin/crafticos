@@ -5,7 +5,7 @@ import { updateNote } from "./updateNote";
 import { deleteNote } from "./deleteNote";
 import { register } from "./auth";
 import { login } from "./auth";
-
+import { user } from "./user";
 import { currentUser } from "./currentUser";
 
 export const resolvers = {
@@ -13,6 +13,7 @@ export const resolvers = {
     getNotes,
     getNoteById,
     currentUser,
+    user,
   },
   Mutation: {
     addNote,

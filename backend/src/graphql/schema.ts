@@ -16,6 +16,7 @@ export const typeDefs = gql`
     email: String!
     name: String!
     role: Role!
+    created_at: String!
   }
 
   type AuthPayload {
@@ -24,6 +25,7 @@ export const typeDefs = gql`
   }
 
   type Query {
+    user(email: String!): User
     getNotes: [Note!]!
     getNoteById(id: ID!): Note
     currentUser: User
@@ -33,7 +35,12 @@ export const typeDefs = gql`
     addNote(text: String!): Note!
     updateNote(id: ID!, text: String!): Note!
     deleteNote(id: ID!): Boolean!
-    register(email: String!, password: String!, name: String): AuthPayload!
+    register(
+      email: String!
+      password: String
+      name: String!
+      role: Role!
+    ): AuthPayload!
     login(email: String!, password: String!): AuthPayload!
   }
 `;

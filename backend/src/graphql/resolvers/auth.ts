@@ -12,9 +12,12 @@ export const register = async (
   }: { email: string; password: string; name: string; role: Role },
   { db }: any,
 ) => {
-  if (!email || !password || !name) {
-    throw new Error("Email, password and name are required");
+  if (!email || !name) {
+    throw new Error("Email and name are required");
   }
+
+  // if (!password && !isGoogleFlow) throw Error("Password is require for normal registration")
+  //  #zpracuj, Vytvoř proměnnou isGoogleFlow, která bude obsahovat Google přihlašování.
 
   if (typeof role === "undefined") role = Role.USER;
   const hashedPassword = await hashPassword(password);

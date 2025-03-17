@@ -1,22 +1,67 @@
 import NextAuth, {
   type NextAuthOptions,
-  type User,
   type Account,
+  type User,
   type Session,
 } from "next-auth";
+import { Role } from "@/types/types";
+
+import { client } from "@/lib/apollo"; // Připojení k GraphQL
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { JWT } from "next-auth/jwt";
-import jwt from "jsonwebtoken";
-import { client } from "@/lib/apollo"; // Připojení k GraphQL
-import { LOGIN_MUTATION } from "@/graphql/mutations/auth"; // GraphQL mutace
-import { Role } from "@/types/types";
+import {
+  LOGIN_MUTATION,
+  REGISTER_MUTATION,
+  GET_USER_QUERY,
+} from "@/graphql/mutations/auth";
 
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      // Callback vracející objekt pro auto-registraci / nalezení Google uživatele
+      async profile(profile) {
+        try {
+          // 1) Zkus získat uživatele z DB podle emailu
+          const res = await client.query({
+            query: GET_USER_QUERY,
+            variables: { email: profile.email },
+            fetchPolicy: "network-only",
+          });
+
+          if (res.data && res.data.user) {
+            // Uživatel existuje, vrátíme ho
+            // (Pokud chcete dostat i token, museli byste udělat extra 'login' mutaci.)
+            return {
+              ...res.data.user,
+              // accessToken: ??? - zatím nic, protože login pro existujícího uživatele nebyl volán
+            };
+          }
+
+          // 2) Pokud uživatel neexistuje, zaregistrujeme ho:
+          const { data } = await client.mutate({
+            mutation: REGISTER_MUTATION,
+            variables: {
+              email: profile.email,
+              // Pro Google nepotřebujete reálné heslo: password: "",
+              name: profile.name,
+              role: Role.USER,
+            },
+          });
+
+          // 3) Vraťte user + token, aby NextAuth mohl uložit 'accessToken' do session
+          return {
+            ...data.register.user,
+            accessToken: data.register.token, // Tohle je klíčová změna
+          };
+        } catch (error) {
+          console.error("Google auto-registration error:", error);
+          // Dříve tady byl fallback, ale teď chceme vidět, co se *opravdu* rozbilo.
+          throw error;
+        }
+      },
     }),
     CredentialsProvider({
       name: "Email and Password",
@@ -33,12 +78,9 @@ export const authOptions: NextAuthOptions = {
               password: credentials?.password,
             },
           });
-
           const { token, user } = data.login;
-
           if (!user) throw new Error("Invalid login credentials");
-
-          return { ...user, accessToken: token } as User;
+          return { ...user, accessToken: token };
         } catch (error) {
           throw new Error(`Invalid email or password ${error}`);
         }
@@ -56,25 +98,14 @@ export const authOptions: NextAuthOptions = {
     }: {
       token: JWT;
       account?: Account | null;
-      user?: User;
+      user?: User; // user je rozšířený module augmentation
     }) {
       if (account && user) {
         token.id = user.id;
         token.email = user.email;
-        token.role = user.role || "Unknown user role";
+        token.role = user.role || Role.USER;
         token.created_at = user.created_at;
-        if (account.provider === "google") {
-          // Google => vygenerujeme vlastní JWT podepsané stejným SECRET,
-          // který ověřuje backend v getUserFromToken
-          token.accessToken = jwt.sign(
-            { userId: user.id },
-            process.env.JWT_SECRET!,
-            { expiresIn: "1h" }
-          );
-        } else {
-          // Credentials => token z GraphQL
-          token.accessToken = (user as User).accessToken;
-        }
+        token.accessToken = (user as User).accessToken;
       }
       return token;
     },
@@ -82,21 +113,23 @@ export const authOptions: NextAuthOptions = {
       if (token) {
         session.user = {
           id: token.id as string,
-          email: token.email as string,
+          email: token.email,
           role: token.role as Role,
           name: token.name,
           created_at: token.created_at as string,
+          image: session.user.image, // zachová se původní hodnota, pokud existuje
         };
         session.accessToken = token.accessToken as string;
       }
       return session;
     },
     async redirect({ baseUrl }) {
-      return `${baseUrl}/dashboard`; // Přesměrování na Dashboard
+      return `${baseUrl}/dashboard`;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.JWT_SECRET,
+  debug: true,
 };
-
+console.log(`JWT_SECRET je: ${process.env.JWT_SECRET}`);
 const handler = NextAuth(authOptions);
 export { handler as POST, handler as GET };
