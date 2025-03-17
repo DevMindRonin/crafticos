@@ -1,6 +1,6 @@
 import NextAuth, {
   type NextAuthOptions,
-  type User as NextAuthUser,
+  type User,
   type Account,
   type Session,
 } from "next-auth";
@@ -8,12 +8,9 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { JWT } from "next-auth/jwt";
 import jwt from "jsonwebtoken";
-import { client } from "../../../../lib/apollo"; // Připojení k GraphQL
+import { client } from "@/lib/apollo"; // Připojení k GraphQL
 import { LOGIN_MUTATION } from "@/graphql/mutations/auth"; // GraphQL mutace
-
-interface User extends NextAuthUser {
-  accessToken?: string;
-}
+import { Role } from "@/types/types";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -38,6 +35,7 @@ export const authOptions: NextAuthOptions = {
           });
 
           const { token, user } = data.login;
+
           if (!user) throw new Error("Invalid login credentials");
 
           return { ...user, accessToken: token } as User;
@@ -63,8 +61,8 @@ export const authOptions: NextAuthOptions = {
       if (account && user) {
         token.id = user.id;
         token.email = user.email;
-        token.role = "user";
-
+        token.role = user.role || "Unknown user role";
+        token.created_at = user.created_at;
         if (account.provider === "google") {
           // Google => vygenerujeme vlastní JWT podepsané stejným SECRET,
           // který ověřuje backend v getUserFromToken
@@ -85,7 +83,9 @@ export const authOptions: NextAuthOptions = {
         session.user = {
           id: token.id as string,
           email: token.email as string,
-          role: token.role as string,
+          role: token.role as Role,
+          name: token.name,
+          created_at: token.created_at as string,
         };
         session.accessToken = token.accessToken as string;
       }

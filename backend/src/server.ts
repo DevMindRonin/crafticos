@@ -6,7 +6,7 @@ import { expressMiddleware } from "@apollo/server/express4";
 import { typeDefs } from "./graphql/schema";
 import { resolvers } from "./graphql/resolvers";
 import db from "./db";
-import { getUserFromToken } from "./graphql/auth";
+import { getUserFromToken } from "./graphql/context";
 
 async function startServer() {
   const app = express();

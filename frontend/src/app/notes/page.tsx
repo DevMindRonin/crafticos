@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { graphqlRequest } from "../../utils/api";
+import { graphqlRequest } from "@/utils/api";
 import Link from "next/link";
-import { Note } from "../../types/types";
+import { Note } from "@/types/types";
 
 const NotesPage = () => {
   const [notes, setNotes] = useState<Note[]>([]);

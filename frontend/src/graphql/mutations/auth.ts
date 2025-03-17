@@ -8,6 +8,26 @@ export const LOGIN_MUTATION = gql`
         id
         email
         name
+        role
+      }
+    }
+  }
+`;
+
+export const REGISTER_MUTATION = gql`
+  mutation Register(
+    $email: String!
+    $password: String!
+    $name: String!
+    $role: Role!
+  ) {
+    register(email: $email, password: $password, name: $name, role: $role) {
+      token
+      user {
+        id
+        email
+        name
+        role
       }
     }
   }

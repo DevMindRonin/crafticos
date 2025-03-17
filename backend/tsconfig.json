@@ -11,7 +11,9 @@
     "forceConsistentCasingInFileNames": true, // Zabraňuje problémům s velkými/malými písmeny v cestách souborů
     "allowSyntheticDefaultImports": true, // Umožňuje defaultní importy pro ESM moduly
     "resolveJsonModule": true, // Podpora importu JSON souborů
-    "sourceMap": true // Generování sourcemaps pro ladění
+    "sourceMap": true, // Generování sourcemaps pro ladění
+    "baseUrl": ".",
+    "paths": { "@/*": ["./src/*"], "@/types/*": ["./src/types/*"] }
   },
   "include": ["src/**/*.ts"], // Zahrnutí všech TypeScript souborů v adresáři src
   "exclude": ["node_modules"] // Vyloučení node_modules

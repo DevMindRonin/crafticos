@@ -1,6 +1,11 @@
 import gql from "graphql-tag";
 
 export const typeDefs = gql`
+  enum Role {
+    USER
+    ADMIN
+  }
+
   type Note {
     id: ID!
     text: String!
@@ -9,8 +14,8 @@ export const typeDefs = gql`
   type User {
     id: ID!
     email: String!
-    role: String!
     name: String!
+    role: Role!
   }
 
   type AuthPayload {

@@ -1,20 +1,9 @@
 "use client";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-const REGISTER_MUTATION = gql`
-  mutation Register($email: String!, $password: String!, $name: String!) {
-    register(email: $email, password: $password, name: $name) {
-      token
-      user {
-        id
-        email
-        name
-      }
-    }
-  }
-`;
+import { REGISTER_MUTATION } from "@/graphql/mutations/auth";
+import { Role } from "@/types/types";
 
 export default function RegisterPage() {
   const [register] = useMutation(REGISTER_MUTATION);
@@ -23,6 +12,7 @@ export default function RegisterPage() {
     email: "",
     password: "",
     name: "",
+    role: Role.USER,
   });
   const [error, setError] = useState("");
 
