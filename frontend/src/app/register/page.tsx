@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { REGISTER_MUTATION } from "@/graphql/mutations/auth";
 import { Role } from "@/types/types";
+import { signIn } from "next-auth/react";
 
 export default function RegisterPage() {
   const [register] = useMutation(REGISTER_MUTATION);
@@ -21,11 +22,25 @@ export default function RegisterPage() {
     try {
       const { data } = await register({ variables: formData });
 
-      if (data) {
-        router.push("/login");
+      if (!data) {
+        throw new Error("Registration failed");
       }
+      const result = await signIn("credentials", {
+        redirect: false, // pokud chcete nejdřív ošetřit výsledek
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (!result || !result.ok) {
+        throw new Error("Auto-login failed. Please log in manually.");
+      }
+
+      // 3) Přesměrování na dashboard po úspěšném přihlášení
+      router.push("/dashboard");
     } catch (err) {
-      setError(`Registration failed ${err}`);
+      setError(
+        `Registration failed: ${err instanceof Error ? err.message : err}`
+      );
     }
   };
 
