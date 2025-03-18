@@ -43,11 +43,15 @@ export const register = async (
 
 export const login = async (
   _: unknown,
-  { email, password }: { email: string; password: string },
+  {
+    email,
+    password,
+    isGoogleFlow,
+  }: { email: string; password?: string; isGoogleFlow?: boolean },
   { db }: any,
 ) => {
-  if (!email || !password) {
-    throw new Error("Email and password are required");
+  if (!email) {
+    throw new Error("Email is required");
   }
 
   // Najdeme uživatele v DB
@@ -60,13 +64,18 @@ export const login = async (
     throw new Error("Invalid login");
   }
 
-  // Porovnáme heslo
-  const valid = await comparePassword(password, user.password);
-  if (!valid) {
-    console.error("Login error: password invalid for user:", user.email);
-    throw new Error("Invalid login");
+  // Pokud to NENÍ Google login => zkontrolujeme heslo
+  if (!isGoogleFlow) {
+    if (!password) {
+      throw new Error("Password is required for normal login");
+    }
+    // Porovnáme heslo
+    const valid = await comparePassword(password, user.password);
+    if (!valid) {
+      console.error("Login error: password invalid for user:", user.email);
+      throw new Error("Invalid login");
+    }
   }
-
   // Vytvoříme token
   const token = jwt.sign(
     { userId: user.id },

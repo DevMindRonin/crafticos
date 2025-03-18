@@ -12,8 +12,8 @@ export const GET_USER_QUERY = gql`
 `;
 
 export const LOGIN_MUTATION = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
+  mutation Login($email: String!, $password: String, $isGoogleFlow: Boolean) {
+    login(email: $email, password: $password, isGoogleFlow: $isGoogleFlow) {
       token
       user {
         id

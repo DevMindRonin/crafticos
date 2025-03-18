@@ -32,11 +32,19 @@ export const authOptions: NextAuthOptions = {
           });
 
           if (res.data && res.data.user) {
-            // Uživatel existuje, vrátíme ho
-            // (Pokud chcete dostat i token, museli byste udělat extra 'login' mutaci.)
+            const { data: loginData } = await client.mutate({
+              mutation: LOGIN_MUTATION,
+              variables: {
+                email: profile.email,
+                password: "", // prázdný řetězec (musí to projít na backendu)
+                isGoogleFlow: true,
+              },
+            });
+
+            // Vrátíme user + token
             return {
-              ...res.data.user,
-              // accessToken: ??? - zatím nic, protože login pro existujícího uživatele nebyl volán
+              ...loginData.login.user,
+              accessToken: loginData.login.token,
             };
           }
 
@@ -45,7 +53,7 @@ export const authOptions: NextAuthOptions = {
             mutation: REGISTER_MUTATION,
             variables: {
               email: profile.email,
-              // Pro Google nepotřebujete reálné heslo: password: "",
+              password: "", // Pro Google nepotřebujete reálné heslo: password: "",
               name: profile.name,
               role: Role.USER,
             },
@@ -76,6 +84,7 @@ export const authOptions: NextAuthOptions = {
             variables: {
               email: credentials?.email,
               password: credentials?.password,
+              isGoogleFlow: false,
             },
           });
           const { token, user } = data.login;
@@ -104,7 +113,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.email = user.email;
         token.role = user.role || Role.USER;
-        token.created_at = user.created_at;
+
         token.accessToken = (user as User).accessToken;
       }
       return token;
@@ -116,7 +125,7 @@ export const authOptions: NextAuthOptions = {
           email: token.email,
           role: token.role as Role,
           name: token.name,
-          created_at: token.created_at as string,
+
           image: session.user.image, // zachová se původní hodnota, pokud existuje
         };
         session.accessToken = token.accessToken as string;

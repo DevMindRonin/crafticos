@@ -16,7 +16,6 @@ export const typeDefs = gql`
     email: String!
     name: String!
     role: Role!
-    created_at: String!
   }
 
   type AuthPayload {
@@ -41,6 +40,6 @@ export const typeDefs = gql`
       name: String!
       role: Role!
     ): AuthPayload!
-    login(email: String!, password: String!): AuthPayload!
+    login(email: String!, password: String, isGoogleFlow: Boolean): AuthPayload!
   }
 `;
