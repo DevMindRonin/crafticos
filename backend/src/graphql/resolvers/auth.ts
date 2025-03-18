@@ -1,6 +1,6 @@
 import { hashPassword, comparePassword } from "../../utils/password";
 import jwt from "jsonwebtoken";
-import { Role } from "../../types/types";
+import { Role, User } from "../../types/types";
 
 export const register = async (
   _: unknown,
@@ -24,7 +24,7 @@ export const register = async (
 
   // Sestavíme SQL dotaz a vložíme nového uživatele
   // a hned si necháme vrátit nově vytvořený záznam
-  const user = await db.one(
+  const user: User = await db.one(
     `INSERT INTO "users" (email, password, name, role)
      VALUES ($1, $2, $3, $4)
      RETURNING id, email, name, role`,
@@ -55,7 +55,7 @@ export const login = async (
   }
 
   // Najdeme uživatele v DB
-  const user = await db.oneOrNone(
+  const user: User | null = await db.oneOrNone(
     `SELECT id, email, password, name, role FROM "users" WHERE email = $1`,
     [email],
   );

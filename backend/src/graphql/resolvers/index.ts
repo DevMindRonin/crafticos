@@ -5,15 +5,15 @@ import { updateNote } from "./updateNote";
 import { deleteNote } from "./deleteNote";
 import { register } from "./auth";
 import { login } from "./auth";
-import { user } from "./user";
 import { currentUser } from "./currentUser";
+import { getUserByEmail } from "./getUserByEmail";
 
 export const resolvers = {
   Query: {
     getNotes,
     getNoteById,
     currentUser,
-    user,
+    getUserByEmail,
   },
   Mutation: {
     addNote,
