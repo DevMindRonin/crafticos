@@ -2,7 +2,7 @@
 Powershell terminal 1.:    
 ```js
 cd backend
-npx tsx src/server
+npx tsx src/index
 ```
 
 Powershell terminal 2.:
