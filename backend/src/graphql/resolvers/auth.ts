@@ -1,6 +1,7 @@
 import { hashPassword, comparePassword } from "../../utils/password";
 import jwt from "jsonwebtoken";
 import { Role, User } from "../../types/types";
+import "dotenv/config";
 
 export const register = async (
   _: unknown,
@@ -35,7 +36,7 @@ export const register = async (
   const token = jwt.sign(
     { userId: user.id },
     process.env.JWT_SECRET as string,
-    { expiresIn: "7d" },
+    { expiresIn: Number(process.env.ACCESS_TOKEN_TIME) },
   );
 
   return { token, user };
@@ -77,10 +78,11 @@ export const login = async (
     }
   }
   // Vytvoříme token
+
   const token = jwt.sign(
     { userId: user.id },
     process.env.JWT_SECRET as string,
-    { expiresIn: "7d" },
+    { expiresIn: Number(process.env.ACCESS_TOKEN_TIME) },
   );
 
   return {
