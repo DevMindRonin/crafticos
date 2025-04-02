@@ -1,39 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { graphqlRequest } from "@/utils/api";
-import Link from "next/link";
+import { useQuery } from "@apollo/client";
+import { GET_NOTES } from "@/graphql/queries/getNotes";
 import { Note } from "@/types/types";
 
 const NotesPage = () => {
-  const [notes, setNotes] = useState<Note[]>([]);
+  const { data, loading, error } = useQuery(GET_NOTES);
 
-  useEffect(() => {
-    const fetchNotes = async () => {
-      const query = `
-        query {
-          getNotes {
-            id
-            text
-          }
-        }
-      `;
-      const result = await graphqlRequest(query);
-      console.log("🔍 GraphQL full result:", result);
-      setNotes(result.data.getNotes);
-    };
-
-    fetchNotes().catch(console.error);
-  }, []);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <div>
-      <h1 className="text-4xl font-bold my-4">LIST ÚKOLŮ</h1>
-      {notes.map((note) => (
+      <h1>LIST ÚKOLŮ</h1>
+      {data.getNotes.map((note: Note) => (
         <div key={note.id}>{note.text}</div>
       ))}
-      <br />
-      <Link href="/dashboard">Back</Link>
     </div>
   );
 };

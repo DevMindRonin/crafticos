@@ -1,11 +1,12 @@
 ## Spuštění aplikace
-Powershell terminal 1.:    
+
+**Powershell terminal 1.:**
 ```js
 cd backend
 npx tsx src/index
 ```
 
-Powershell terminal 2.:
+**Powershell terminal 2.:**
 ```js
 cd frontend
 npm run dev
@@ -14,9 +15,9 @@ npm run dev
 ### Endpointy:
 
 ```js
-localhost:3000/register
-localhost:3000/login
 localhost:3000/dashboard
+localhost:3000/login
+localhost:3000/register
 localhost:3000/notes
 ```
 
