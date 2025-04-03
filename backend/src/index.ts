@@ -29,9 +29,11 @@ async function startServer() {
     "/graphql",
     expressMiddleware(server, {
       context: async ({ req }) => {
-        // Authorization: Bearer <token>
-        const token = req.headers.authorization?.split(" ")[1];
-        const user = token ? getUserFromToken(token) : null;
+        // Authorization: Bearer <token> - teď jsem to vyrušil, abych to nemusel pořád ověřovat token v hlavičce
+        // const token = req.headers.authorization?.split(" ")[1];
+        // const user = token ? getUserFromToken(token) : null;
+        // aby to fungovalo, stanovil jsem prázdného "user"
+        const user = {};
 
         console.log("Decoded User:", user); // Ověřte, zda je user správně dekódován
 

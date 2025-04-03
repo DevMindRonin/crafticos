@@ -17,9 +17,6 @@ export const register = async (
     throw new Error("Email and name are required");
   }
 
-  // if (!password && !isGoogleFlow) throw Error("Password is require for normal registration")
-  //  #zpracuj, Vytvoř proměnnou isGoogleFlow, která bude obsahovat Google přihlašování.
-
   if (typeof role === "undefined") role = Role.USER;
   const hashedPassword = await hashPassword(password);
 
