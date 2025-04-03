@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { REGISTER_MUTATION } from "@/graphql/mutations/auth";
-import { Role } from "@/types/types";
+import { Role } from "@/types/note.types";
 import { signIn } from "next-auth/react";
 
 export default function RegisterPage() {

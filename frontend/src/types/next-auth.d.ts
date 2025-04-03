@@ -1,5 +1,5 @@
 import "next-auth";
-import { Role } from "@/types/types";
+import { Role } from "@/types/note.types";
 declare module "next-auth" {
   interface User extends NextAuthUser {
     name?: string | null;

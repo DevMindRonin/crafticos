@@ -4,7 +4,7 @@ import NextAuth, {
   type User,
   type Session,
 } from "next-auth";
-import { Role } from "@/types/types";
+import { Role } from "@/types/user.types";
 
 import { client } from "@/lib/apollo"; // Připojení k GraphQL
 import GoogleProvider from "next-auth/providers/google";

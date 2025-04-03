@@ -2,7 +2,7 @@
 
 import { useQuery } from "@apollo/client";
 import { GET_NOTES } from "@/graphql/queries/getNotes";
-import { Note } from "@/types/types";
+import { NoteType } from "@/types/note.types";
 
 const NotesPage = () => {
   const { data, loading, error } = useQuery(GET_NOTES);
@@ -13,7 +13,7 @@ const NotesPage = () => {
   return (
     <div>
       <h1>LIST ÚKOLŮ</h1>
-      {data.getNotes.map((note: Note) => (
+      {data.getNotes.map((note: NoteType) => (
         <div key={note.id}>{note.text}</div>
       ))}
     </div>
