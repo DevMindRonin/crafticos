@@ -24,9 +24,9 @@ export const typeDefs = gql`
   }
 
   type Query {
-    getUserByEmail(email: String!): User
     getNotes: [Note!]!
     getNoteById(id: ID!): Note
+    getUserByEmail(email: String!): User
     currentUser: User
   }
 

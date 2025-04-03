@@ -1,4 +1,5 @@
-import { DbClient, AuthenticatedUser } from "@/types/types";
+import { AuthenticatedUser } from "@/types/user.types";
+import { DbClient } from "@/types/db.types";
 
 export const getUserByEmail = async (
   _: unknown,

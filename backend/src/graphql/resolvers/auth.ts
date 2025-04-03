@@ -1,6 +1,6 @@
 import { hashPassword, comparePassword } from "../../utils/password";
 import jwt from "jsonwebtoken";
-import { Role, User } from "../../types/types";
+import { Role, User } from "../../types/user.types";
 import "dotenv/config";
 
 export const register = async (

@@ -1,12 +1,12 @@
-import { getNotes } from "./getNotes";
-import { getNoteById } from "./getNoteById";
-import { addNote } from "./addNote";
-import { updateNote } from "./updateNote";
-import { deleteNote } from "./deleteNote";
+import { getNotes } from "./notes/getNotes";
+import { getNoteById } from "./notes/getNoteById";
+import { addNote } from "./notes/addNote";
+import { updateNote } from "./notes/updateNote";
+import { deleteNote } from "./notes/deleteNote";
 import { register } from "./auth";
 import { login } from "./auth";
-import { currentUser } from "./currentUser";
-import { getUserByEmail } from "./getUserByEmail";
+import { currentUser } from "./users/currentUser";
+import { getUserByEmail } from "./users/getUserByEmail";
 
 export const resolvers = {
   Query: {
