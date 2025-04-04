@@ -1,5 +1,14 @@
 ## Spuštění aplikace
 
+### Endpointy:
+
+```js
+localhost:3000/dashboard
+localhost:3000/login
+localhost:3000/register
+localhost:3000/notes
+```
+
 **Powershell terminal 1.:**
 ```js
 cd backend
@@ -12,12 +21,4 @@ cd frontend
 npm run dev
 ```
 
-### Endpointy:
-
-```js
-localhost:3000/dashboard
-localhost:3000/login
-localhost:3000/register
-localhost:3000/notes
-```
 
