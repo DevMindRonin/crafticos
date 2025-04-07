@@ -17,11 +17,11 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "sourceMap": true,
-    "baseUrl": ".",
-    "paths": { "@/*": ["./src/*"], "@/types/*": ["./src/types/*"] },
+    "baseUrl": "./src",
+    "paths": { "@/*": ["./*"], "@/types/*": ["./types/*"] },
     "noImplicitAny": true,
     "jsx": "react-jsx"
   },
-  "include": ["src/**/*.ts"], // Zahrnutí všech TypeScript souborů v adresáři src
-  "exclude": ["node_modules"] // Vyloučení node_modules
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }

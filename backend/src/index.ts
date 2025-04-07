@@ -7,45 +7,45 @@ import { typeDefs } from "./graphql/schema";
 import { resolvers } from "./graphql/resolvers";
 import db from "./db";
 import { getUserFromToken } from "./graphql/context";
+import { serverConfig } from "./config";
+import { Context } from "./types";
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
 
 async function startServer() {
-  const app = express();
-  app.use(
-    cors({
-      origin: process.env.FRONTEND_URL, // Povolí přístupy z frontendu
-      credentials: true, // Povolí cookies a autorizace
-    }),
-  );
-  app.use(express.json());
+  try {
+    await server.start();
 
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-  });
+    app.use(
+      serverConfig.graphqlPath,
+      expressMiddleware(server, {
+        context: async ({ req }) => {
+          // Authorization: Bearer <token> - teď jsem to vyrušil, abych to nemusel pořád ověřovat token v hlavičce
+          // const token = req.headers.authorization?.split(" ")[1];
+          // const user = token ? getUserFromToken(token) : null;
+          // aby to fungovalo, stanovil jsem prázdného "user"
+          const user = null; // toto je jen zástupné, pak odstraň
 
-  await server.start();
-
-  app.use(
-    "/graphql",
-    expressMiddleware(server, {
-      context: async ({ req }) => {
-        // Authorization: Bearer <token> - teď jsem to vyrušil, abych to nemusel pořád ověřovat token v hlavičce
-        // const token = req.headers.authorization?.split(" ")[1];
-        // const user = token ? getUserFromToken(token) : null;
-        // aby to fungovalo, stanovil jsem prázdného "user"
-        const user = {};
-
-        console.log("Decoded User:", user); // Ověřte, zda je user správně dekódován
-
-        return { db, user };
-      },
-    }),
-  );
-
-  app.listen(process.env.BACKEND_PORT, () => {
-    console.log(`Server running on ${process.env.BACKEND_URL}`);
-    console.log(`GraphQL endpoint: ${process.env.BACKEND_URL}/graphql`);
-  });
+          console.log("Decoded User:", user); // Ověřte, zda je user správně dekódován
+          return { db, user }; // user je zatím null, pak to upravím
+        },
+      })
+    );
+    app.listen(serverConfig.port, () => {
+      console.log(`Server running on http://localhost:${serverConfig.port}`);
+      console.log(
+        `GraphQL endpoint: http://localhost:${serverConfig.port}${serverConfig.graphqlPath}`
+      );
+    });
+  } catch (error) {}
 }
 
 startServer();

@@ -1,4 +1,8 @@
-export interface DbClient {
-  oneOrNone: (query: string, values?: any[]) => Promise<any>;
-  query: (query: string, values?: any[]) => Promise<any>;
+import { IDatabase } from "pg-promise";
+import * as pg from "pg-promise/typescript/pg-subset";
+import { User } from "./user.types";
+
+export interface Context {
+  db: IDatabase<pg.IClient>;
+  user: User | null;
 }

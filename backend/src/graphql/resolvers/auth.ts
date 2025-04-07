@@ -1,8 +1,7 @@
 import { hashPassword, comparePassword } from "../../utils/password";
 import jwt from "jsonwebtoken";
-import { Role, User } from "../../types/user.types";
 import "dotenv/config";
-
+import { Context, Role, User } from "@/types";
 export const register = async (
   _: unknown,
   {
@@ -11,7 +10,7 @@ export const register = async (
     name,
     role,
   }: { email: string; password: string; name: string; role: Role },
-  { db }: any,
+  { db }: Context
 ) => {
   if (!email || !name) {
     throw new Error("Email and name are required");
@@ -26,14 +25,14 @@ export const register = async (
     `INSERT INTO "users" (email, password, name, role)
      VALUES ($1, $2, $3, $4)
      RETURNING id, email, name, role`,
-    [email, hashedPassword, name, role],
+    [email, hashedPassword, name, role]
   );
 
   // Vytvoříme token
   const token = jwt.sign(
     { userId: user.id },
     process.env.JWT_SECRET as string,
-    { expiresIn: Number(process.env.ACCESS_TOKEN_TIME) },
+    { expiresIn: Number(process.env.ACCESS_TOKEN_TIME) }
   );
 
   return { token, user };
@@ -46,7 +45,7 @@ export const login = async (
     password,
     isGoogleFlow,
   }: { email: string; password?: string; isGoogleFlow?: boolean },
-  { db }: any,
+  { db }: any
 ) => {
   if (!email) {
     throw new Error("Email is required");
@@ -55,7 +54,7 @@ export const login = async (
   // Najdeme uživatele v DB
   const user: User | null = await db.oneOrNone(
     `SELECT id, email, password, name, role FROM "users" WHERE email = $1`,
-    [email],
+    [email]
   );
   if (!user) {
     console.error("Login error: user not found for email:", email);
@@ -79,7 +78,7 @@ export const login = async (
   const token = jwt.sign(
     { userId: user.id },
     process.env.JWT_SECRET as string,
-    { expiresIn: Number(process.env.ACCESS_TOKEN_TIME) },
+    { expiresIn: Number(process.env.ACCESS_TOKEN_TIME) }
   );
 
   return {
