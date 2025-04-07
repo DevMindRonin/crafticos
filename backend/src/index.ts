@@ -1,14 +1,18 @@
-import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import "dotenv/config";
+
 import { ApolloServer } from "@apollo/server";
-import { expressMiddleware } from "@apollo/server/express4";
-import { typeDefs } from "./graphql/schema";
-import { resolvers } from "./graphql/resolvers";
-import db from "./db";
-import { getUserFromToken } from "./graphql/context";
 import { serverConfig } from "./config";
-import { Context } from "./types";
+import { expressMiddleware } from "@apollo/server/express4";
+
+import { typeDefs } from "./graphql/typedefs";
+import { resolvers } from "./graphql/resolvers";
+
+import db from "./db";
+
+import { User, Role } from "./types";
+import { getUserFromToken } from "./graphql/context";
 
 const app = express();
 
@@ -32,7 +36,13 @@ async function startServer() {
           // const token = req.headers.authorization?.split(" ")[1];
           // const user = token ? getUserFromToken(token) : null;
           // aby to fungovalo, stanovil jsem prázdného "user"
-          const user = null; // toto je jen zástupné, pak odstraň
+          const user: User = {
+            id: "6f143491-1efc-4a6d-aa50-3ad1415f506f",
+            email: "aa@aa.aa",
+            name: "aa",
+            role: Role.ADMIN,
+            password: null,
+          };
 
           console.log("Decoded User:", user); // Ověřte, zda je user správně dekódován
           return { db, user }; // user je zatím null, pak to upravím

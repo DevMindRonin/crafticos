@@ -1,4 +1,5 @@
 import { Context } from "@/types";
+
 export const addNote = async (
   _: unknown,
   { text }: { text: string },

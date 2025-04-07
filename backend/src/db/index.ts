@@ -1,5 +1,5 @@
 import pgPromise from "pg-promise";
-import { databaseConfig } from "../config";
+import { databaseConfig } from "@/config";
 import { IDatabase } from "pg-promise";
 import * as pg from "pg-promise/typescript/pg-subset";
 

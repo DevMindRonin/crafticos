@@ -1,4 +1,9 @@
-export const getNotes = async (_: unknown, __: unknown, { db, user }: any) => {
+import { Context } from "@/types";
+export const getNotes = async (
+  _: unknown,
+  __: unknown,
+  { db, user }: Context
+) => {
   if (!user) throw new Error("Not authenticated");
   try {
     return await db.any("SELECT * FROM notes");

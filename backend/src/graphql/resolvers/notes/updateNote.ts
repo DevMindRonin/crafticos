@@ -1,7 +1,8 @@
+import { Context } from "@/types";
 export const updateNote = async (
   _: unknown,
   { id, text }: { id: string; text: string },
-  { db, user }: any
+  { db, user }: Context
 ) => {
   if (!user) throw new Error("Not authenticated");
   try {
