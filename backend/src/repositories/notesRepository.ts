@@ -1,7 +1,7 @@
 import { Context, NoteType, User } from "@/types";
 import { SQL } from "@/constants";
 
-export const add = async (
+export const create = async (
   text: string,
   { user, db }: Context
 ): Promise<NoteType> => {
@@ -26,5 +26,20 @@ export const remove = async (
   } catch (error) {
     console.error(error);
     throw new Error("Error deleting note");
+  }
+};
+
+export const findById = async (
+  id: string,
+  { user, db }: Context
+): Promise<NoteType | null> => {
+  if (!user) throw new Error("Not authenticated");
+  try {
+    const note = await db.oneOrNone(SQL.GET_NOTE_BY_ID, [id]);
+    if (!note) return null;
+    return { id: note.id, text: note.text, created_at: note.created_at };
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error retrieving note");
   }
 };
