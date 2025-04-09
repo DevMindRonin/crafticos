@@ -1,6 +1,4 @@
-import { gql } from "graphql-tag";
-
-export const mutationTypeDefs = gql`
+export const mutationTypeDefs = `#graphql
   type Mutation {
     addNote(text: String!): Note!
     updateNote(id: ID!, text: String!): Note!

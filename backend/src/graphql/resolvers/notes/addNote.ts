@@ -1,18 +1,10 @@
 import { Context } from "@/types";
+import { add } from "@/hooks/useNotes";
 
 export const addNote = async (
   _: unknown,
   { text }: { text: string },
-  { db, user }: Context
+  context: Context
 ) => {
-  if (!user) throw new Error("Not authenticated");
-  try {
-    return await db.one(
-      "INSERT INTO notes (text) VALUES ($1) RETURNING id, text",
-      [text]
-    );
-  } catch (error) {
-    console.error(error);
-    throw new Error("Error adding note");
-  }
+  return add(text, context);
 };

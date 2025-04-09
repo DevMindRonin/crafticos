@@ -1,6 +1,4 @@
-import { gql } from "graphql-tag";
-
-export const typeDefs = gql`
+export const authTypeDefs = `#graphql
   enum Role {
     USER
     ADMIN

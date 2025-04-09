@@ -1,6 +1,4 @@
-import { gql } from "graphql-tag";
-
-export const queriesTypesDefs = gql`
+export const queryTypeDefs = `#graphql
   type Query {
     getNotes: [Note!]!
     getNoteById(id: ID!): Note

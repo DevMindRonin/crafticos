@@ -1,9 +1,7 @@
-import { gql } from "graphql-tag";
-
-export const noteTypesDefs = gql`
+export const noteTypeDefs = `#graphql
   type Note {
     id: ID!
     text: String!
-    createdAt: String!
+    created_at: String!
   }
 `;
