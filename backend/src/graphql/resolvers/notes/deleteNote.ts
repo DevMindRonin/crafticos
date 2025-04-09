@@ -1,14 +1,14 @@
 import { Context } from "@/types";
+import { remove } from "@/repositories/notesRepository";
 
 export const deleteNote = async (
   _: unknown,
   { id }: { id: string },
-  { db, user }: Context
+  context: Context
 ) => {
-  if (!user) throw new Error("Not authenticated");
   try {
-    const result = await db.result("DELETE FROM notes WHERE id = $1", [id]);
-    return result.rowCount > 0;
+    const result = await remove(id, context);
+    return result;
   } catch (error) {
     console.error(error);
     throw new Error("Error deleting note");

@@ -1,5 +1,5 @@
 import { Context } from "@/types";
-import { add } from "@/hooks/useNotes";
+import { add } from "@/repositories/notesRepository";
 
 export const addNote = async (
   _: unknown,
