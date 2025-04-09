@@ -1,14 +1,6 @@
+import { findAll } from "@/repositories/notesRepository";
 import { Context } from "@/types";
-export const getNotes = async (
-  _: unknown,
-  __: unknown,
-  { db, user }: Context
-) => {
-  if (!user) throw new Error("Not authenticated");
-  try {
-    return await db.any("SELECT * FROM notes");
-  } catch (error) {
-    console.error(error);
-    throw new Error("Error retrieving notes");
-  }
+
+export const getNotes = async (_: unknown, __: unknown, context: Context) => {
+  return await findAll(context);
 };
