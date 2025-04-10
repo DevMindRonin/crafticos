@@ -1,10 +1,12 @@
-import { addNote } from "./notes/addNote";
-import { deleteNote } from "./notes/deleteNote";
-import { getNoteById } from "./notes/getNoteById";
-import { getNotes } from "./notes/getNotes";
-import { updateNote } from "./notes/updateNote";
+import {
+  updateNote,
+  getNotes,
+  addNote,
+  getNoteById,
+  deleteNote,
+} from "./notes";
 
-import { getUserByEmail } from "./users/getUserByEmail";
+import { getUserByEmail } from "./auth/getUserByEmail";
 
 export const resolvers = {
   Query: {

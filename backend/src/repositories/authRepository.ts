@@ -1,7 +1,20 @@
 import { hashPassword, comparePassword } from "@/utils/password";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-import { Context, Role, User } from "@/types";
+import { Context, Role, User, AuthenticatedUser } from "@/types";
+import { SQL } from "@/constants";
+
+export const listUser = async (email: string, { db }: Context) => {
+  try {
+    const user: User | null = await db.oneOrNone(SQL.GET_USER_BY_EMAIL, [
+      email,
+    ]);
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error reading user");
+  }
+};
 
 export const register = async (
   _: unknown,
