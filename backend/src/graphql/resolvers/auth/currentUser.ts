@@ -1,4 +1,5 @@
 import { Context } from "@/types";
+
 export const currentUser = async (
   _: unknown,
   __: unknown,

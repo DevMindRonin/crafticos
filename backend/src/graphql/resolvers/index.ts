@@ -6,13 +6,13 @@ import {
   deleteNote,
 } from "./notes";
 import { login, register } from "@/repositories/authRepository";
-import { getUserByEmail } from "./auth/getUserByEmail";
-import { currentUser } from "./auth/currentUser";
+import { getUserByEmail, deleteUser, currentUser } from "./auth";
 
 export const resolvers = {
   Query: {
     getNotes,
     getNoteById,
+
     getUserByEmail,
     currentUser,
   },
@@ -20,7 +20,9 @@ export const resolvers = {
     addNote,
     updateNote,
     deleteNote,
+
     login,
     register,
+    deleteUser,
   },
 };

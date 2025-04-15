@@ -10,5 +10,6 @@ export const mutationTypeDefs = `#graphql
       role: Role!
     ): AuthPayload!
     login(email: String!, password: String, isGoogleFlow: Boolean): AuthPayload
+    deleteUser(id: ID!): Boolean!
   }
 `;

@@ -14,6 +14,25 @@ export const listUser = async (email: string, { db }: Context) => {
   }
 };
 
+export const removeUser = async (
+  id: string,
+  { user, db }: Context
+): Promise<boolean> => {
+  if (!user) throw new Error("Not authenticated");
+
+  // if (user.id !== id && user.role !== Role.ADMIN) {
+  //   throw new Error("Unauthorized");
+  // }
+
+  try {
+    await db.none(SQL.DELETE_USER, [id]);
+    return true;
+  } catch (error) {
+    console.error("User deletion failed:", error);
+    throw new Error("Database operation failed");
+  }
+};
+
 export const register = async (
   _: unknown,
   { email, password, name, role }: User,
