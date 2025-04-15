@@ -1,4 +1,5 @@
 export type NoteType = {
-  id: number;
+  id: string;
   text: string;
+  created_at?: string;
 };

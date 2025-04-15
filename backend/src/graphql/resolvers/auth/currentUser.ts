@@ -5,5 +5,6 @@ export const currentUser = async (
   { user }: Context
 ) => {
   if (!user) throw new Error("Not authenticated");
+  console.log("User in currentUser resolver:", user);
   return user;
 };

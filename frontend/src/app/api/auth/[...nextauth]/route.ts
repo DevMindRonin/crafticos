@@ -5,11 +5,11 @@ import NextAuth, {
   type Session,
 } from "next-auth";
 import { Role } from "@/types/user.types";
-
+import type { JWT } from "next-auth/jwt";
 import { client } from "@/lib/apollo"; // Připojení k GraphQL
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import type { JWT } from "next-auth/jwt";
+
 import {
   LOGIN_MUTATION,
   REGISTER_MUTATION,
@@ -46,7 +46,7 @@ export const authOptions: NextAuthOptions = {
               },
             });
 
-            console.log("Login response:", loginData);
+            console.log("Login frontend response:", loginData);
 
             return {
               ...loginData.login.user,
@@ -85,7 +85,12 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        console.log("Received frontend credentials:", credentials);
         try {
+          if (!credentials?.email || !credentials?.password) {
+            throw new Error("Email and password are required");
+          }
+
           const { data } = await client.mutate({
             mutation: LOGIN_MUTATION,
             variables: {
@@ -94,11 +99,30 @@ export const authOptions: NextAuthOptions = {
               isGoogleFlow: false,
             },
           });
+          console.log("Login mutation response:", data);
           const { token, user } = data.login;
-          if (!user) throw new Error("Invalid login credentials");
-          return { ...user, accessToken: token };
+          if (!user || !token) {
+            throw new Error("Invalid login credentials");
+          }
+
+          console.log("Returning user data:", {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            hasToken: !!token,
+          });
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            accessToken: token,
+          };
         } catch (error) {
-          throw new Error(`Invalid email or password ${error}`);
+          console.error("Login error:", error);
+          throw new Error("Invalid email or password");
         }
       },
     }),
@@ -106,6 +130,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login", // Přesměrování na vlastní login stránku
   },
+
   callbacks: {
     async jwt({
       token,
@@ -138,7 +163,7 @@ export const authOptions: NextAuthOptions = {
           email: token.email,
           role: token.role as Role,
           name: token.name,
-          image: session.user.image,
+          accessToken: token.accessToken,
         };
         session.accessToken = token.accessToken as string;
       }
@@ -153,6 +178,76 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.JWT_SECRET,
   debug: true,
 };
-console.log(`JWT_SECRET je: ${process.env.JWT_SECRET}`);
+
 const handler = NextAuth(authOptions);
 export { handler as POST, handler as GET };
+
+// Verze která mi funguje. 5. složka
+// callbacks: {
+//   async jwt({ token, user }) {
+//     console.log("JWT callback - input:", {
+//       tokenExists: !!token,
+
+//       userExists: !!user,
+//       userData: user
+//         ? { id: user.id, email: user.email, role: user.role }
+//         : null,
+//     });
+//     if (user) {
+//       token.id = user.id;
+//       token.email = user.email;
+//       token.name = user.name;
+//       token.role = user.role || Role.USER;
+//       token.accessToken = user.accessToken;
+//     }
+//     console.log("JWT callback - output token:", {
+//       id: token.id,
+//       email: token.email,
+//       role: token.role,
+//       hasAccessToken: !!token.accessToken,
+//     });
+//     return token;
+//   },
+//   async session({ session, token }) {
+//     console.log("Session callback - input:", {
+//       sessionExists: !!session,
+//       tokenExists: !!token,
+//       tokenData: token
+//         ? {
+//             id: token.id,
+//             email: token.email,
+//             role: token.role,
+//             hasAccessToken: !!token.accessToken,
+//           }
+//         : null,
+//     });
+
+//     if (token) {
+//       session.user = {
+//         id: token.id,
+//         email: token.email,
+//         role: token.role,
+//         name: token.name || "",
+//         image: token.picture || null,
+//         accessToken: token.accessToken,
+//       };
+//       session.accessToken = token.accessToken;
+//     }
+//     console.log("Session callback - output:", {
+//       user: session.user
+//         ? {
+//             id: session.user.id,
+//             email: session.user.email,
+//             role: session.user.role,
+//             hasAccessToken: !!session.user.accessToken,
+//           }
+//         : null,
+//       hasSessionAccessToken: !!session.accessToken,
+//     });
+//     return session;
+//   },
+//   async redirect({ url, baseUrl }) {
+//     console.log("Redirect callback - url:", url);
+//     console.log("Redirect callback - baseUrl:", baseUrl);
+//     return `${baseUrl}/dashboard`;
+//   },

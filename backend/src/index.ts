@@ -11,41 +11,45 @@ import { resolvers } from "./graphql/resolvers";
 
 import db from "./db";
 
-import { User, Role } from "./types";
-import { getUserFromToken } from "./graphql/context";
-
+import { User } from "./types";
+import { getUserFromToken } from "./utils/token";
+import { Context, Role } from "@/types";
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(express.json());
 
-const server = new ApolloServer({
+const server = new ApolloServer<Context>({
   typeDefs,
   resolvers,
 });
 
-async function startServer() {
+const startServer = async () => {
   try {
     await server.start();
 
     app.use(
       serverConfig.graphqlPath,
       expressMiddleware(server, {
-        context: async ({ req }) => {
-          // Authorization: Bearer <token> - teď jsem to vyrušil, abych to nemusel pořád ověřovat token v hlavičce
-          // const token = req.headers.authorization?.split(" ")[1];
-          // const user = token ? getUserFromToken(token) : null;
-          // aby to fungovalo, stanovil jsem prázdného "user"
+        context: async ({ req }): Promise<Context> => {
+          const token = req.headers.authorization?.split(" ")[1];
+          console.log("Authorization header:", req.headers.authorization);
+
+          //
+          // 1) Přihlašování s autorizací
+          //const user = token ? getUserFromToken(token) : null;
+
+          // 2) Přihlašování bez autorizace
           const user: User = {
             id: "6f143491-1efc-4a6d-aa50-3ad1415f506f",
             email: "aa@aa.aa",
             name: "aa",
             role: Role.ADMIN,
-            password: null,
           };
+          //
 
-          console.log("Decoded User:", user); // Ověřte, zda je user správně dekódován
-          return { db, user }; // user je zatím null, pak to upravím
+          console.log("Login backend response:", { token, user });
+          return { db, user: user as User | null };
         },
       })
     );
@@ -56,6 +60,6 @@ async function startServer() {
       );
     });
   } catch (error) {}
-}
+};
 
 startServer();

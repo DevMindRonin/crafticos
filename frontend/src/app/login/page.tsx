@@ -12,7 +12,6 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Přihlášení přes Credentials
     const result = await signIn("credentials", {
       redirect: false, // použijeme vlastní přesměrování
       email,
@@ -38,6 +37,7 @@ const LoginPage = () => {
         Přihlásit se přes Google
       </button>
 
+      {/* Přihlášení přes Email */}
       <div className="w-full max-w-md">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input

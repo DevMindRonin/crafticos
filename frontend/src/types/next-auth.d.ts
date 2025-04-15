@@ -1,10 +1,13 @@
+import { Role } from "./user.types";
 import "next-auth";
-import { Role } from "@/types/note.types";
+
 declare module "next-auth" {
-  interface User extends NextAuthUser {
-    name?: string | null;
-    role?: Role;
-    accessToken?: string;
+  interface User {
+    id: string;
+    email: string;
+    name: string;
+    role: Role;
+    accessToken: string;
     image?: string | null;
   }
 
@@ -12,12 +15,15 @@ declare module "next-auth" {
     user: User;
     accessToken: string;
   }
+}
 
+declare module "next-auth/jwt" {
   interface JWT {
     id: string;
     email: string;
-    name?: string;
+    name: string;
     role: Role;
     accessToken: string;
+    picture?: string | null;
   }
 }

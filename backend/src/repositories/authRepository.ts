@@ -1,14 +1,12 @@
 import { hashPassword, comparePassword } from "@/utils/password";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-import { Context, Role, User, AuthenticatedUser } from "@/types";
+import { Context, Role, User } from "@/types";
 import { SQL } from "@/constants";
 
 export const listUser = async (email: string, { db }: Context) => {
   try {
-    const user: User | null = await db.oneOrNone(SQL.GET_USER_BY_EMAIL, [
-      email,
-    ]);
+    const user = await db.oneOrNone(SQL.GET_USER_BY_EMAIL, [email]);
     return user;
   } catch (error) {
     console.log(error);
@@ -21,23 +19,28 @@ export const register = async (
   { email, password, name, role }: User,
   { db }: Context
 ) => {
-  if (!email || !name) {
-    throw new Error("Email and name are required");
+  if (!email) {
+    throw new Error("Email is required");
   }
 
   if (typeof role === "undefined") role = Role.USER;
-  if (password !== null) {
+  if (password !== undefined) {
     const hashedPassword = await hashPassword(password);
 
-    const user: User = await db.one(
-      `INSERT INTO "users" (email, password, name, role)
-     VALUES ($1, $2, $3, $4)
-     RETURNING id, email, name, role`,
-      [email, hashedPassword, name, role]
-    );
+    const user = await db.one(SQL.REGISTER_USER, [
+      email,
+      hashedPassword,
+      name,
+      role,
+    ]);
 
     const token = jwt.sign(
-      { userId: user.id },
+      {
+        userId: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
       process.env.JWT_SECRET as string,
       { expiresIn: Number(process.env.ACCESS_TOKEN_TIME) }
     );
@@ -52,47 +55,54 @@ export const login = async (
     password,
     isGoogleFlow,
   }: { email: string; password?: string; isGoogleFlow?: boolean },
-  { db }: any
+  { db }: Context
 ) => {
-  if (!email) {
-    throw new Error("Email is required");
-  }
+  try {
+    if (!email) throw new Error("Email is required");
 
-  const user: User | null = await db.oneOrNone(
-    `SELECT id, email, password, name, role FROM "users" WHERE email = $1`,
-    [email]
-  );
-  if (!user) {
-    console.error("Login error: user not found for email:", email);
-    throw new Error("Invalid login");
-  }
+    const user = await db.oneOrNone(SQL.LOGIN_USER, [email]);
 
-  if (!isGoogleFlow) {
-    if (!password) {
-      throw new Error("Password is required for normal login");
+    console.log("🔍 Found user:", user);
+    console.log("🧪 Password field exists?", user?.password !== undefined);
+    console.log("🔐 Password value:", user?.password);
+
+    if (!user) {
+      console.error("User not found:", email);
+      throw new Error("Invalid credentials");
     }
-    if (user.password !== null) {
+
+    if (!isGoogleFlow) {
+      if (!password) {
+        console.error("Password is required for normal login");
+        throw new Error("Invalid credentials");
+      }
+
       const valid = await comparePassword(password, user.password);
+      console.log("Password valid?", valid);
       if (!valid) {
-        console.error("Login error: password invalid for user:", user.email);
-        throw new Error("Invalid login");
+        console.error("Invalid password for:", email);
+        throw new Error("Invalid credentials");
       }
     }
-  }
 
-  const token = jwt.sign(
-    { userId: user.id },
-    process.env.JWT_SECRET as string,
-    { expiresIn: Number(process.env.ACCESS_TOKEN_TIME) }
-  );
-
-  return {
-    token,
-    user: {
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, name: user.name, role: user.role },
+      process.env.JWT_SECRET as string,
+      {
+        expiresIn: Number(process.env.ACCESS_TOKEN_TIME),
+      }
+    );
+    console.log(`Token from frontend: ${token}`);
+    const userResponse: User = {
       id: user.id,
       email: user.email,
       name: user.name,
       role: user.role,
-    },
-  };
+    };
+
+    return { token, user: userResponse };
+  } catch (error) {
+    console.error("Login error:", error);
+    throw error;
+  }
 };
