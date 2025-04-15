@@ -6,7 +6,7 @@ export const graphqlRequest = async (query: string, variables = {}) => {
   const session = await getSession();
   const token = session?.accessToken ?? "";
 
-  console.log("🔍 Token sent to backend:", token); // Debugging
+  console.log("🔍 Token sent to backend:", token);
 
   if (!token) {
     console.error("User is not authenticated.");

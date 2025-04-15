@@ -21,12 +21,11 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      // Callback vracející objekt pro auto-registraci / nalezení Google uživatele
+
       async profile(profile) {
         try {
           console.log("Google profile:", profile);
 
-          // 1) Zkus získat uživatele z DB podle emailu
           const res = await client.query({
             query: GET_USER_QUERY,
             variables: { email: profile.email },
@@ -55,7 +54,7 @@ export const authOptions: NextAuthOptions = {
           }
 
           console.log("User doesn't exist, attempting registration");
-          // 2) Pokud uživatel neexistuje, zaregistrujeme ho:
+
           const { data } = await client.mutate({
             mutation: REGISTER_MUTATION,
             variables: {
@@ -128,7 +127,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/login", // Přesměrování na vlastní login stránku
+    signIn: "/login",
   },
 
   callbacks: {
@@ -139,7 +138,7 @@ export const authOptions: NextAuthOptions = {
     }: {
       token: JWT;
       account?: Account | null;
-      user?: User; // user je rozšířený module augmentation
+      user?: User;
     }) {
       console.log("JWT callback - token:", token);
       console.log("JWT callback - account:", account);
@@ -181,73 +180,3 @@ export const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions);
 export { handler as POST, handler as GET };
-
-// Verze která mi funguje. 5. složka
-// callbacks: {
-//   async jwt({ token, user }) {
-//     console.log("JWT callback - input:", {
-//       tokenExists: !!token,
-
-//       userExists: !!user,
-//       userData: user
-//         ? { id: user.id, email: user.email, role: user.role }
-//         : null,
-//     });
-//     if (user) {
-//       token.id = user.id;
-//       token.email = user.email;
-//       token.name = user.name;
-//       token.role = user.role || Role.USER;
-//       token.accessToken = user.accessToken;
-//     }
-//     console.log("JWT callback - output token:", {
-//       id: token.id,
-//       email: token.email,
-//       role: token.role,
-//       hasAccessToken: !!token.accessToken,
-//     });
-//     return token;
-//   },
-//   async session({ session, token }) {
-//     console.log("Session callback - input:", {
-//       sessionExists: !!session,
-//       tokenExists: !!token,
-//       tokenData: token
-//         ? {
-//             id: token.id,
-//             email: token.email,
-//             role: token.role,
-//             hasAccessToken: !!token.accessToken,
-//           }
-//         : null,
-//     });
-
-//     if (token) {
-//       session.user = {
-//         id: token.id,
-//         email: token.email,
-//         role: token.role,
-//         name: token.name || "",
-//         image: token.picture || null,
-//         accessToken: token.accessToken,
-//       };
-//       session.accessToken = token.accessToken;
-//     }
-//     console.log("Session callback - output:", {
-//       user: session.user
-//         ? {
-//             id: session.user.id,
-//             email: session.user.email,
-//             role: session.user.role,
-//             hasAccessToken: !!session.user.accessToken,
-//           }
-//         : null,
-//       hasSessionAccessToken: !!session.accessToken,
-//     });
-//     return session;
-//   },
-//   async redirect({ url, baseUrl }) {
-//     console.log("Redirect callback - url:", url);
-//     console.log("Redirect callback - baseUrl:", baseUrl);
-//     return `${baseUrl}/dashboard`;
-//   },

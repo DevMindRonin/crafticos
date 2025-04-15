@@ -9,7 +9,6 @@ const httpLink = createHttpLink({
 
 const authLink = setContext(async (_, { headers }) => {
   const session = await getSession();
-
   return {
     headers: {
       ...headers,
