@@ -1,20 +1,16 @@
 "use client";
 
-import { useQuery } from "@apollo/client";
-import { GET_NOTES } from "@/graphql/queries/getNotes";
-import { NoteType } from "@/types/note.types";
+import { NoteList } from "@/components/notes/NoteList";
+import { useNotes } from "@/hooks/useNotes";
 
 const NotesPage = () => {
-  const { data, loading } = useQuery(GET_NOTES);
-
-  if (loading) return <p>Loading...</p>;
+  const { notesToDisplay, loading } = useNotes();
+  if (loading) return <div>Načítání...</div>;
 
   return (
-    <div>
-      <h1>LIST ÚKOLŮ</h1>
-      {data.getNotes.map((note: NoteType) => (
-        <div key={note.id}>{note.text}</div>
-      ))}
+    <div className="px-[150px] py-4">
+      <h1 className="text-2xl font-bold mb-4">NOTES</h1>
+      <NoteList notes={notesToDisplay} />
     </div>
   );
 };
