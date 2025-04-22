@@ -2,7 +2,7 @@
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { REGISTER_MUTATION } from "@/graphql/mutations/auth";
+import { REGISTER_MUTATION } from "@/graphql/auth";
 import { Role } from "@/types/user.types";
 import { signIn } from "next-auth/react";
 

@@ -1,16 +1,15 @@
 "use client";
 import React from "react";
-import { NoteType } from "@/types/note.types";
+import { NotesListProps } from "@/types/note.types";
 import Note from "@/components/notes/Note";
 
-type NoteListProps = {
-  notes: NoteType[];
-};
-
-export const NoteList = ({ notes }: NoteListProps) => {
+export const NoteList = ({ notes, onDelete }: NotesListProps) => {
   return (
     <div>
-      {notes && notes.map((note) => <Note key={note.id} note={note} />)}
+      {notes &&
+        notes.map((note) => (
+          <Note key={note.id} note={note} onDelete={onDelete} />
+        ))}
     </div>
   );
 };

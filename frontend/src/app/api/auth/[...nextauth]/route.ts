@@ -14,7 +14,7 @@ import {
   LOGIN_MUTATION,
   REGISTER_MUTATION,
   GET_USER_QUERY,
-} from "@/graphql/mutations/auth";
+} from "@/graphql/auth";
 
 export const authOptions: NextAuthOptions = {
   providers: [
