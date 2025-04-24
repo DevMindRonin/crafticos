@@ -1,10 +1,15 @@
 import { NoteType } from "@/types/note.types";
 
 export interface DeleteMutationResult {
-  deleteNote: boolean;
   id: string;
+  deleteNote: boolean;
 }
 
 export interface NoteQueryResult {
   getNotes: NoteType[];
+}
+
+export interface UpdateMutationResult {
+  id: string;
+  updateNote: NoteType;
 }
