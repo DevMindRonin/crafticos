@@ -7,13 +7,54 @@ import {
 } from "@/types/graphql.types";
 import { useState } from "react";
 export const useNotes = () => {
+  const [error, setError] = useState("");
+  const [noteText, setNoteText] = useState<string>("");
+
   const { data } = useQuery<NoteQueryResult>(GET_NOTES);
 
-  const [onDelete] = useMutation<DeleteMutationResult>(DELETE_NOTE);
   const [onUpdate] = useMutation<UpdateMutationResult>(UPDATE_NOTE);
 
-  const [noteText, setNoteText] = useState<string>("");
-  const [error, setError] = useState("");
+  const [onDelete] = useMutation<DeleteMutationResult>(DELETE_NOTE, {
+    update(cache, { data }) {
+      const successfullyDeletedNote = data?.deleteNote;
+
+      if (successfullyDeletedNote?.id) {
+        const existingNotes = cache.readQuery<NoteQueryResult>({
+          query: GET_NOTES,
+        });
+        if (existingNotes?.getNotes) {
+          cache.writeQuery({
+            query: GET_NOTES,
+            data: {
+              getNotes: existingNotes.getNotes.filter(
+                (note) => note.id !== successfullyDeletedNote.id
+              ),
+            },
+          });
+        }
+      }
+    },
+  });
+
+  const [addNewNote] = useMutation(ADD_NOTE, {
+    update(cache, { data }) {
+      const newNote = data?.addNote;
+      if (!newNote) return;
+
+      const existingNotes = cache.readQuery<NoteQueryResult>({
+        query: GET_NOTES,
+      });
+
+      if (existingNotes?.getNotes) {
+        cache.writeQuery({
+          query: GET_NOTES,
+          data: {
+            getNotes: [...existingNotes.getNotes, newNote],
+          },
+        });
+      }
+    },
+  });
 
   const onDeleteNote = async (id: string) => {
     try {
@@ -39,26 +80,6 @@ export const useNotes = () => {
       throw error;
     }
   };
-
-  const [addNewNote] = useMutation(ADD_NOTE, {
-    update(cache, { data }) {
-      const newNote = data?.addNote;
-      if (!newNote) return;
-
-      const existingNotes = cache.readQuery<NoteQueryResult>({
-        query: GET_NOTES,
-      });
-
-      if (existingNotes?.getNotes) {
-        cache.writeQuery({
-          query: GET_NOTES,
-          data: {
-            getNotes: [...existingNotes.getNotes, newNote],
-          },
-        });
-      }
-    },
-  });
 
   const onSave = async () => {
     try {

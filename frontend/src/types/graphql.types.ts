@@ -1,8 +1,7 @@
 import { NoteType } from "@/types/note.types";
 
 export interface DeleteMutationResult {
-  id: string;
-  deleteNote: boolean;
+  deleteNote: NoteType;
 }
 
 export interface NoteQueryResult {
