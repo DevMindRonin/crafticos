@@ -7,7 +7,7 @@ import {
 } from "@/types/graphql.types";
 import { useState } from "react";
 export const useNotes = () => {
-  const { data, refetch } = useQuery<NoteQueryResult>(GET_NOTES);
+  const { data } = useQuery<NoteQueryResult>(GET_NOTES);
 
   const [onDelete] = useMutation<DeleteMutationResult>(DELETE_NOTE);
   const [onUpdate] = useMutation<UpdateMutationResult>(UPDATE_NOTE);
@@ -20,7 +20,6 @@ export const useNotes = () => {
       await onDelete({
         variables: { id },
       });
-      refetch();
     } catch (error) {
       console.error("Error during deleting note:", error);
       throw error;
@@ -41,7 +40,25 @@ export const useNotes = () => {
     }
   };
 
-  const [inputNewNote] = useMutation(ADD_NOTE);
+  const [addNewNote] = useMutation(ADD_NOTE, {
+    update(cache, { data }) {
+      const newNote = data?.addNote;
+      if (!newNote) return;
+
+      const existingNotes = cache.readQuery<NoteQueryResult>({
+        query: GET_NOTES,
+      });
+
+      if (existingNotes?.getNotes) {
+        cache.writeQuery({
+          query: GET_NOTES,
+          data: {
+            getNotes: [...existingNotes.getNotes, newNote],
+          },
+        });
+      }
+    },
+  });
 
   const onSave = async () => {
     try {
@@ -49,14 +66,15 @@ export const useNotes = () => {
         setError("Insert some value");
         return;
       }
-      await inputNewNote({
+      await addNewNote({
         variables: {
           text: noteText,
         },
       });
-      refetch();
+      // refetch();
       setNoteText("");
-    } catch {
+    } catch (error) {
+      console.log(error);
       setError("Problem with saving a note");
     }
   };

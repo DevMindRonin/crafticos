@@ -28,7 +28,9 @@ export const UPDATE_NOTE = gql`
 export const ADD_NOTE = gql`
   mutation AddNote($text: String!) {
     addNote(text: $text) {
+      id
       text
+      created_at
     }
   }
 `;
