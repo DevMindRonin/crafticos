@@ -2,7 +2,7 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { NewRegistration } from "@/components/auth/NewRegistration";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -63,14 +63,7 @@ const LoginPage = () => {
         </form>
         {error && <p className="text-red-500 mt-2">{error}</p>}
       </div>
-
-      {/* Odkaz na registraci */}
-      <p className="mt-4">
-        Nemáš účet?{" "}
-        <Link href="/register" className="text-blue-500 underline">
-          Zaregistruj se zde
-        </Link>
-      </p>
+      <NewRegistration />
     </div>
   );
 };
