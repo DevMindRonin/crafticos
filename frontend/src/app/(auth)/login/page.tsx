@@ -3,6 +3,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { NewRegistration } from "@/components/auth/NewRegistration";
+import { LoginGoogle } from "@/components/auth/LoginGoogle";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -29,13 +30,7 @@ const LoginPage = () => {
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <h1 className="text-4xl font-bold my-4">Login</h1>
 
-      {/* Tlačítko pro přihlášení přes Google */}
-      <button
-        onClick={() => signIn("google", { callbackUrl: "/" })}
-        className="bg-blue-500 text-white px-4 py-2 rounded w-full max-w-md mb-4"
-      >
-        Přihlásit se přes Google
-      </button>
+      <LoginGoogle />
 
       {/* Přihlášení přes Email */}
       <div className="w-full max-w-md">
