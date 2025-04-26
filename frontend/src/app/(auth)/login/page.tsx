@@ -13,13 +13,13 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await signIn("credentials", {
-      redirect: false, // použijeme vlastní přesměrování
+      redirect: false,
       email,
       password,
     });
 
     if (!result?.error) {
-      router.push("/");
+      router.refresh();
     } else {
       setError("Invalid email or password");
     }

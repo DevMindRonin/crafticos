@@ -1,20 +1,9 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { NavMenu } from "@/components/NavMenu";
-import Link from "next/link";
-import { redirect } from "next/navigation";
+// import Link from "next/link";
 
-export default async function Dashboard() {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    redirect("/login");
-  }
-
+export default function Dashboard() {
   return (
     <div>
-      <NavMenu />
-
+      {/* 
       {session && (
         <div>
           <div>
@@ -40,7 +29,7 @@ export default async function Dashboard() {
         {session.user.role === "ADMIN" && (
           <Link href="/notes">Zobrazit úkoly</Link>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }

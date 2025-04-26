@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Providers } from "./providers"; // import té komponenty z kroku 1
+import { Providers } from "./providers";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "Hobbies App",
@@ -9,10 +10,10 @@ export const metadata: Metadata = {
     "Information about lessons, ordering lessons, overview of activities",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <html lang="en">

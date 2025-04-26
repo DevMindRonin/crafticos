@@ -171,7 +171,11 @@ export const authOptions: NextAuthOptions = {
     async redirect({ url, baseUrl }) {
       console.log("Redirect callback - url:", url);
       console.log("Redirect callback - baseUrl:", baseUrl);
-      return `${baseUrl}/`;
+
+      if (url.startsWith(baseUrl)) {
+        return url;
+      }
+      return baseUrl;
     },
   },
   secret: process.env.JWT_SECRET,
