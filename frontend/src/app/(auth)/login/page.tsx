@@ -1,63 +1,31 @@
 "use client";
-import { signIn } from "next-auth/react";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { NewRegistration } from "@/components/auth/NewRegistration";
 import { LoginGoogle } from "@/components/auth/LoginGoogle";
+import { LoginCredentials } from "@/components/auth/LoginCredentials";
+import { useAuth } from "@/hooks/useAuth";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const router = useRouter();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const result = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-    });
-
-    if (!result?.error) {
-      router.refresh();
-    } else {
-      setError("Invalid email or password");
-    }
-  };
+  const {
+    handleSubmitCredentials,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    error,
+  } = useAuth();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <h1 className="text-4xl font-bold my-4">Login</h1>
-
       <LoginGoogle />
-
-      {/* Přihlášení přes Email */}
-      <div className="w-full max-w-md">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="border p-2 rounded"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border p-2 rounded"
-          />
-          <button
-            type="submit"
-            className="bg-green-500 text-white px-4 py-2 rounded"
-          >
-            Login
-          </button>
-        </form>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-      </div>
+      <LoginCredentials
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        error={error}
+        handleSubmit={handleSubmitCredentials}
+      />
       <NewRegistration />
     </div>
   );
