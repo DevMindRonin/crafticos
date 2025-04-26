@@ -1,11 +1,5 @@
-interface CredentialsProps {
-  email: string;
-  setEmail: (emailText: string) => void;
-  password: string;
-  setPassword: (passwordText: string) => void;
-  error: string;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
-}
+"use client";
+import { CredentialsProps } from "next-auth";
 
 export const LoginCredentials = ({
   email,

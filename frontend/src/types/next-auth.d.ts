@@ -15,6 +15,15 @@ declare module "next-auth" {
     user: User;
     accessToken: string;
   }
+
+  interface CredentialsProps {
+    email: string;
+    setEmail: (emailText: string) => void;
+    password: string;
+    setPassword: (passwordText: string) => void;
+    error: string;
+    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+  }
 }
 
 declare module "next-auth/jwt" {

@@ -1,5 +1,4 @@
 "use client";
-
 import { NoteList } from "@/components/notes/NoteList";
 import { NoteForm } from "@/components/notes/NoteForm";
 import { useNotes } from "@/hooks/useNotes";
