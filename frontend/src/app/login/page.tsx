@@ -19,7 +19,7 @@ const LoginPage = () => {
     });
 
     if (!result?.error) {
-      router.push("/dashboard");
+      router.push("/");
     } else {
       setError("Invalid email or password");
     }
@@ -31,7 +31,7 @@ const LoginPage = () => {
 
       {/* Tlačítko pro přihlášení přes Google */}
       <button
-        onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+        onClick={() => signIn("google", { callbackUrl: "/" })}
         className="bg-blue-500 text-white px-4 py-2 rounded w-full max-w-md mb-4"
       >
         Přihlásit se přes Google

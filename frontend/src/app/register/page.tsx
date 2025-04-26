@@ -35,8 +35,7 @@ export default function RegisterPage() {
         throw new Error("Auto-login failed. Please log in manually.");
       }
 
-      // 3) Přesměrování na dashboard po úspěšném přihlášení
-      router.push("/dashboard");
+      router.push("/");
     } catch (err) {
       setError(
         `Registration failed: ${err instanceof Error ? err.message : err}`
