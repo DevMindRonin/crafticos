@@ -6,6 +6,7 @@ import {
   UpdateMutationResult,
 } from "@/types/graphql.types";
 import { useState } from "react";
+
 export const useNotes = () => {
   const [error, setError] = useState("");
   const [noteText, setNoteText] = useState<string>("");
@@ -17,6 +18,7 @@ export const useNotes = () => {
   const [onDelete] = useMutation<DeleteMutationResult>(DELETE_NOTE, {
     update(cache, { data }) {
       const successfullyDeletedNote = data?.deleteNote;
+      if (!successfullyDeletedNote) return;
 
       if (successfullyDeletedNote?.id) {
         const existingNotes = cache.readQuery<NoteQueryResult>({
@@ -41,18 +43,13 @@ export const useNotes = () => {
       const newNote = data?.addNote;
       if (!newNote) return;
 
-      const existingNotes = cache.readQuery<NoteQueryResult>({
-        query: GET_NOTES,
-      });
-
-      if (existingNotes?.getNotes) {
-        cache.writeQuery({
-          query: GET_NOTES,
-          data: {
-            getNotes: [...existingNotes.getNotes, newNote],
+      cache.modify({
+        fields: {
+          getNotes(existingNotes = []) {
+            return [...existingNotes, newNote];
           },
-        });
-      }
+        },
+      });
     },
   });
 
@@ -92,7 +89,6 @@ export const useNotes = () => {
           text: noteText,
         },
       });
-      // refetch();
       setNoteText("");
     } catch (error) {
       console.log(error);
