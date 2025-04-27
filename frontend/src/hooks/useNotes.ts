@@ -5,6 +5,7 @@ import {
   DeleteMutationResult,
   UpdateMutationResult,
 } from "@/types/graphql.types";
+import { NoteType } from "@/types/note.types";
 import { useState } from "react";
 
 export const useNotes = () => {
@@ -17,24 +18,18 @@ export const useNotes = () => {
 
   const [onDelete] = useMutation<DeleteMutationResult>(DELETE_NOTE, {
     update(cache, { data }) {
-      const successfullyDeletedNote = data?.deleteNote;
-      if (!successfullyDeletedNote) return;
+      const deletedNoteId = data?.deleteNote.id;
+      if (!deletedNoteId) return;
 
-      if (successfullyDeletedNote?.id) {
-        const existingNotes = cache.readQuery<NoteQueryResult>({
-          query: GET_NOTES,
-        });
-        if (existingNotes?.getNotes) {
-          cache.writeQuery({
-            query: GET_NOTES,
-            data: {
-              getNotes: existingNotes.getNotes.filter(
-                (note) => note.id !== successfullyDeletedNote.id
-              ),
-            },
-          });
-        }
-      }
+      cache.modify({
+        fields: {
+          getNotes(existingNotes = [], { readField }) {
+            return existingNotes.filter(
+              (noteRef: NoteType) => readField("id", noteRef) !== deletedNoteId
+            );
+          },
+        },
+      });
     },
   });
 

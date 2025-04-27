@@ -6,6 +6,7 @@ export const GET_NOTES = gql`
       id
       text
       created_at
+      __typename
     }
   }
 `;
@@ -14,6 +15,7 @@ export const DELETE_NOTE = gql`
   mutation DeleteNote($id: ID!) {
     deleteNote(id: $id) {
       id
+      __typename
     }
   }
 `;
@@ -23,6 +25,7 @@ export const UPDATE_NOTE = gql`
     updateNote(id: $id, text: $text) {
       id
       text
+      __typename
     }
   }
 `;
@@ -33,6 +36,7 @@ export const ADD_NOTE = gql`
       id
       text
       created_at
+      __typename
     }
   }
 `;

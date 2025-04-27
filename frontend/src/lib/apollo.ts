@@ -23,23 +23,17 @@ export const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache({
     typePolicies: {
-      Query: {
-        fields: {
-          getNotes: {
-            merge(_, incoming) {
-              return incoming;
-            },
-          },
-        },
+      Note: {
+        keyFields: ["id"],
       },
     },
   }),
   defaultOptions: {
     watchQuery: {
-      fetchPolicy: "network-only",
+      fetchPolicy: "cache-first",
     },
     query: {
-      fetchPolicy: "network-only",
+      fetchPolicy: "cache-first",
     },
   },
 });

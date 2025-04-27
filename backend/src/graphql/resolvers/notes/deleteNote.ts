@@ -8,9 +8,10 @@ export const deleteNote = async (
 ) => {
   try {
     const result = await remove(id, context);
-    return result;
+    console.log(`Resolver calling for remove with result: ${result}`);
+    return { id: result };
   } catch (error) {
-    console.error(error);
-    throw new Error("Error deleting note");
+    console.error("Error in deleteNote resolver:", error);
+    throw error;
   }
 };

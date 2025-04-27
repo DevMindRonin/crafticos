@@ -2,7 +2,7 @@ export const mutationTypeDefs = `#graphql
   type Mutation {
     addNote(text: String!): Note!
     updateNote(id: ID!, text: String!): Note!
-    deleteNote(id: ID!): Note!
+    deleteNote(id: ID!): DeleteNoteResponse!
     register(
       email: String!
       password: String

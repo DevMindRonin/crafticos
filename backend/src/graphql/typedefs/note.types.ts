@@ -4,4 +4,8 @@ export const noteTypeDefs = `#graphql
     text: String!
     created_at: String!
   }
+
+  type DeleteNoteResponse {
+    id: String!
+  }
 `;

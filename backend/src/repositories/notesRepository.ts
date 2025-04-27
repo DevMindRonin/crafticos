@@ -18,17 +18,18 @@ export const create = async (
 export const remove = async (
   id: string,
   { user, db }: Context
-): Promise<NoteType> => {
+): Promise<string> => {
   if (!user) throw new Error("Not authenticated");
+  console.log(`Attempting to delete note with id: ${id}`);
   try {
-    const result = await db.one(SQL.DELETE_NOTE, [id]);
-    return result;
+    await db.oneOrNone(SQL.DELETE_NOTE, [id]);
+    console.log(`Successfully deleted note with id: ${id}`);
+    return id;
   } catch (error) {
-    console.error(error);
-    throw new Error("Error deleting note");
+    console.error("Error in remove:", error);
+    throw error;
   }
 };
-
 export const findById = async (
   id: string,
   { user, db }: Context
