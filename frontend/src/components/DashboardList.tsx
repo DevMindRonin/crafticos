@@ -11,7 +11,7 @@ import {
   FileBarGraph,
   VectorPen,
 } from "react-bootstrap-icons";
-
+import CircularProgressBar from "./CircularProgressBar";
 const DashboardList = () => {
   const { data: session } = useSession();
   return (
@@ -43,12 +43,9 @@ const DashboardList = () => {
                 </Col>
                 <Col md={8}>
                   <Card.Title>Daily Workout</Card.Title>
-                  <Card.Text>
-                    Oorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Ipsa harum veritatis quam, saepe id porro, tempora
-                    aspernatur iure sunt illo quis molestias animi excepturi
-                    recusandae commodi vel explicabo voluptates. Obcaecati!
-                  </Card.Text>
+                  <div>
+                    <CircularProgressBar percentage={75} />
+                  </div>
                 </Col>
               </Row>
             </Card>
