@@ -11,9 +11,9 @@ type Props = {
 
 export const NavMenu = ({ session }: Props) => {
   return (
-    <Navbar expand="lg" className="bg-light p-3">
+    <Navbar expand="lg" bg="dark" variant="dark" className="p-3">
       <Container>
-        <Navbar.Brand>Fighter</Navbar.Brand>
+        <Navbar.Brand className="text-white">Fighter</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav variant="underline" className="me-auto">
@@ -22,8 +22,11 @@ export const NavMenu = ({ session }: Props) => {
             <Nav.Link href="/new-lesson">New lesson</Nav.Link>
           </Nav>
           <Nav variant="underline" className="d-flex align-items-center">
-            <Nav.Link href="/account">{session.user.name}</Nav.Link>
+            <Nav.Link className="text-white" href="/account">
+              {session.user.name}
+            </Nav.Link>
             <Nav.Link
+              className="text-white"
               onClick={() => {
                 signOut({ callbackUrl: "/login" });
               }}
