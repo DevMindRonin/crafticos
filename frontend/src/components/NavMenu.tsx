@@ -13,15 +13,16 @@ export const NavMenu = ({ session }: Props) => {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand href="/">Hobbies</Navbar.Brand>
+        <Navbar.Brand>Hobbies</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav variant="underline" className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/notes">Notes</Nav.Link>
+            <Nav.Link href="/new-lesson">New lesson</Nav.Link>
           </Nav>
-          <Nav className="d-flex align-items-center">
-            <div>{session.user.name}</div>
+          <Nav variant="underline" className="d-flex align-items-center">
+            <Nav.Link href="/account">{session.user.name}</Nav.Link>
             <Nav.Link
               onClick={() => {
                 signOut({ callbackUrl: "/login" });

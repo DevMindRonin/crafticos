@@ -1,8 +1,16 @@
-// import Link from "next/link";
-
+import { Table } from "react-bootstrap";
 export default function Dashboard() {
   return (
     <div>
+      <h1>My account</h1>
+
+      {/* cards: https://react-bootstrap.netlify.app/docs/components/cards */}
+      {/* // images : https://react-bootstrap.netlify.app/docs/components/images */}
+      {/* Checks https://react-bootstrap.netlify.app/docs/forms/checks-radios */}
+      {/* forms https://react-bootstrap.netlify.app/docs/forms/floating-labels */}
+      {/* forms layout https://react-bootstrap.netlify.app/docs/forms/layout */}
+      {/* forms validation: https://react-bootstrap.netlify.app/docs/forms/validation */}
+      <Table></Table>
       {/* 
       {session && (
         <div>
