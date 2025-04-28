@@ -1,12 +1,14 @@
-import { Row } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 
 const Footer = () => {
   return (
-    <div>
-      <Row className="justify-content-center mb-3">
-        Created by Magic Studio Ltd. 2025
-      </Row>
-    </div>
+    <footer className="bg-light text-center py-3">
+      <Container>
+        <Row className="justify-content-center">
+          Created by Magic Studio Ltd. 2025
+        </Row>
+      </Container>
+    </footer>
   );
 };
 
