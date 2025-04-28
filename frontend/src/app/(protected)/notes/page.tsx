@@ -17,7 +17,7 @@ const NotesPage = () => {
 
   return (
     <div className="px-[150px] py-4">
-      <h1 className="text-2xl font-bold mb-4">NOTES</h1>
+      <h1 className="text-2xl font-bold mb-4">List of notes</h1>
       <NoteList
         notes={notesToDisplay}
         onDelete={onDeleteNote}

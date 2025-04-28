@@ -145,9 +145,6 @@ export default DashboardList;
   /* cards: https://react-bootstrap.netlify.app/docs/components/cards */
 }
 {
-  /* // images : https://react-bootstrap.netlify.app/docs/components/images */
-}
-{
   /* Checks https://react-bootstrap.netlify.app/docs/forms/checks-radios */
 }
 {
