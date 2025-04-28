@@ -1,6 +1,10 @@
 "use client";
 import React from "react";
 const Account = () => {
-  return <div></div>;
+  return (
+    <div>
+      <h1>My account</h1>
+    </div>
+  );
 };
 export default Account;

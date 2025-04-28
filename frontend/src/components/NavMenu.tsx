@@ -11,9 +11,9 @@ type Props = {
 
 export const NavMenu = ({ session }: Props) => {
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" className="bg-light p-3">
       <Container>
-        <Navbar.Brand>Hobbies</Navbar.Brand>
+        <Navbar.Brand>Fighter</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav variant="underline" className="me-auto">
