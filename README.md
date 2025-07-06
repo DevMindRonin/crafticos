@@ -1,42 +1,35 @@
-# notepad [... in progress]
+# Crafticos Admin
 
-A note-taking and search application with user authentication and database integration. 
+A simple admin interface for a hobby club. Users can log in using **credentials** or **Google authentication** to access basic member information. The UI features a minimal top navigation bar for quick access.
 
-## Technologies
-**Frontend (/frontend):**
-- Next.js (React framework)
-- TypeScript
-- Apollo Client (GraphQL client)
-- Tailwind CSS (styling)
-- React Hooks
+## 🛠️ Tech Stack
 
-**Backend (/backend):**
-- Node.js / Express
-- Apollo Server (GraphQL server)
-- PostgreSQL (pg and pg-promise)
-- TypeScript
+### Frontend
+- Next.js 15
+- React 19
+- Apollo Client
+- NextAuth (credentials & Google auth)
+- Bootstrap + React Bootstrap
 
+### Backend
+- Express.js
+- GraphQL (Apollo Server)
+- PostgreSQL (via pg-promise)
+- JSON Web Token (JWT)
+- Bcrypt for password hashing
 
-## Running the Application 
+## 🚀 Getting Started
 
-**Powershell terminal #1**
+### Backend
 ```js
 cd backend
+npm install
 npm run dev
 ```
 
-**Powershell terminal #2**
+### Frontend
 ```js
 cd frontend
+npm install
 npm run dev
 ```
-
-### Endpointy
-
-```js
-localhost:3000/dashboard
-localhost:3000/login
-localhost:3000/register
-localhost:3000/notes
-```
-
