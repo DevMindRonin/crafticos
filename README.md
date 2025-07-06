@@ -33,3 +33,5 @@ cd frontend
 npm install
 npm run dev
 ```
+
+![image1](./frontend/public/images/crafticos_main.jpg)
